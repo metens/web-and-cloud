@@ -1,6 +1,9 @@
 # cloud-metens-metens
 
+# This is my first gitlab project
 
+My name is **Nathan Metens**!
+`cout << "Hello World!" << endl;`
 
 ## Getting started
 
