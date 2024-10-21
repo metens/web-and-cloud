@@ -1,0 +1,27 @@
+
+{% extends 'layout.html' %}
+
+{% blck content %}
+<form action="/submit_song" method="POST">
+	<!-- Song title -->
+	<label for="song_title">Song Title:</label>
+	<input type="text" id="song_title" name="song_title" required>
+
+	<!-- Artist -->
+	<label for="artist">Artist:</label>
+	<input type="text" id="artist" name="artist" required>
+
+	<!-- Release date -->
+	<label for="release_date">Release Date:</label>
+	<input type="date" id="release_date" name="release_date" required>
+
+	<!-- Song URL -->
+	<label for="song_url">Song URL:</label>
+	<input type="url" id="song_url" name="song_url" placeholder="https://example.com" required>
+
+	<!-- Submit button -->
+	<input type="submit" value="Submit">
+</form>
+
+{% endblock %}
+
