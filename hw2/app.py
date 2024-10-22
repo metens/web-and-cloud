@@ -1,5 +1,5 @@
 from flask import Flask # WSGI (Web Server Gateway Interface)
-from model_sqlite3 import model
+from gbmodel.model_sqlite3 import model
 from index import Index
 from sign import Sign
 

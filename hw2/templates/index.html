@@ -1,5 +1,17 @@
 {% extends 'layout.html' %}
 
-{% blck content %}
+{% block content %}
+
+	<h2>Songs in the database</h2>
+	<h3>Enter a song <a href="{{ url_for('sign') }}">here</a></h3>
+	<h3>Entries:</h3>
+	{% for entry in entries %}
+		<p class="entry">
+			{{ entry.title }} <br>
+			{{ entry.artist }} <br>
+			{{ entry.release }} <br>
+			{{ entry.url }}
+		</p>
+	{% endfor %}
 
 {% endblock %}
