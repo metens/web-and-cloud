@@ -1,14 +1,15 @@
-import flask
+from flask import redirect, request, url_for, render_template
+from flask.views import MethodView
 import gbmodel
 
-class Sign(flask.views.MethodView):
+class Sign(MethodView):
     def get(self):
-        return flask.render_template('sign.html')
+        return render_template('sign.html')
     
     def post(self):
         model = gbmodel.get_model()
-        model.insert(flask.request.form['title'],
-                     flask.request.form['artist'],
-                     flask.request.form['release'],
-                     flask.request.form['url'])
-        return flask.redirect(flask.url_for('index'))
+        model.insert(request.form['title'],
+                     request.form['artist'],
+                     request.form['release'],
+                     request.form['url'])
+        return redirect(url_for('index'))

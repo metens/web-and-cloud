@@ -11,21 +11,21 @@ class model(Model):
         create the table.
         """ 
 	# Initial connection attempt each time we try accessing the DB file
-        connection = sqlite3.connect('DB_FILE')
+        connection = sqlite3.connect(DB_FILE)
         cursor = connection.cursor()	
 
         try:
             cursor.execute("SELECT COUNT(ROWID) FROM songs")
         except sqlite3.OperationalError:
             cursor.execute("""CREATE TABLE songs (title text, 
-                           artist text, release date, url text""")
+                           artist text, release date, url text)""")
     
     def select(self):
         """
         Retrieve each row from the DB_FILE.
         """
 	# Initial connection attempt:
-        connection = sqlite3.connect('DB_FILE')
+        connection = sqlite3.connect(DB_FILE)
         cursor = connection.cursor()	
 
         cursor.execute("SELECT * FROM songs")
@@ -36,7 +36,7 @@ class model(Model):
         Inserts a song into the database.
         """ 
 	# Connection attempt:
-        connection = sqlite3.connect('DB_FILE')
+        connection = sqlite3.connect(DB_FILE)
         cursor = connection.cursor()	
 
         new_song = {'title':title,

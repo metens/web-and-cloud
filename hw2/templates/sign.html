@@ -2,22 +2,22 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<form action="/submit_song" method="POST">
+<form action="{{url_for('sign')}}" method="POST">
 	<!-- Song title -->
-	<label for="song_title">Song Title:</label>
-	<input type="text" id="song_title" name="song_title" required>
+	<label for="title">Song Title:</label>
+	<input type="text" id="title" name="title" required>
 
 	<!-- Artist -->
 	<label for="artist">Artist:</label>
 	<input type="text" id="artist" name="artist" required>
 
 	<!-- Release date -->
-	<label for="release_date">Release Date:</label>
-	<input type="date" id="release_date" name="release_date" required>
+	<label for="release">Release Date:</label>
+	<input type="date" id="release" name="release" required>
 
-	<!-- Song URL -->
-	<label for="song_url">Song URL:</label>
-	<input type="url" id="song_url" name="song_url" placeholder="https://example.com" required>
+	<!-- Song url -->
+	<label for="url">Song URL:</label>
+	<input type="url" id="url" name="url" placeholder="https://example.com" required>
 
 	<!-- Submit button -->
 	<input type="submit" value="Submit">
