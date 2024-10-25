@@ -8,7 +8,8 @@ class Sign(MethodView):
     
     def post(self):
         model = gbmodel.get_model()
-        model.insert(request.form['title'],
+        model.insert(
+	             request.form['title'],
                      request.form['artist'],
                      request.form['release'],
                      request.form['url'])
