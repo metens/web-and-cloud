@@ -4,9 +4,13 @@ import sqlite3
 DB_FILE = "song_entries.db" # Database file
 
 class model(Model):
+	""" model is derived from the Model base class. """
+
 	def __init__(self):
-		"""Try to connect to the DB_FILE. If the database doesn't exist, create the table."""
-		# Initial connection attempt each time we try accessing the DB file
+		""" Try to connect to the DB_FILE. 
+		If the database doesn't exist, create the table. """
+
+		# Initial connection attempt each time we try accessing the DB file:
 		connection = sqlite3.connect(DB_FILE)
 		cursor = connection.cursor()	
 
@@ -22,7 +26,11 @@ class model(Model):
 					);""")
 
 	def select(self):
-		"""Retrieve each row from the DB_FILE."""
+		""" Retrieve each row from the DB_FILE.
+		Each row has  a song id, title, artist, release date,
+		and a url where the song can be found on the internet.
+		:return: List of lists containing all rows of the database. """
+
 		# Initial connection attempt:
 		connection = sqlite3.connect(DB_FILE)
 		cursor = connection.cursor()	
@@ -30,9 +38,10 @@ class model(Model):
 		cursor.execute("SELECT * FROM songs;")
 		return cursor.fetchall()
 
-	def insert(self, title, artist, release, url):
-		"""Inserts a song into the database. Given the title,
-		artist, release date, and the url where the song can be found.""" 
+	def insert(self, title: str, artist: str, release: str, url: str) -> bool:
+		""" Inserts a song into the database. Given the title,
+		artist, release date, and the url where the song can be found. """ 
+
 		# Connection attempt:
 		connection = sqlite3.connect(DB_FILE)
 		cursor = connection.cursor()	
@@ -51,8 +60,9 @@ class model(Model):
 		cursor.close()
 		return True 
 
-	def delete(self, song_id):
-		"""Takes a song_id and deletes it from the DB_FILE."""
+	def delete(self, song_id: int) -> bool:
+		""" Takes a song_id and deletes it from the DB_FILE. """
+
 		# Initial database connection attempt:
 		connection = sqlite3.connect(DB_FILE);
 		cursor = connection.cursor();

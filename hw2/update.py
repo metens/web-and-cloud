@@ -4,12 +4,19 @@ import gbmodel
 
 class Update(MethodView):
 	def get(self):
+		""" Returns the html file for the update screen """
+
 		return render_template('update.html')
 
 	def post(self):
-		# Delete a song in the database by its id:
-		song_id = request.form['id'] # Retrieve the song by id
+		""" Grabs the song 'id' inputed by the user in the
+		update.html form submission and removes it from the
+		songs table in the database. """
+
+		song_id = request.form['id'] # Retrieve the song by id from the form
 
 		model = gbmodel.get_model() # Get the model
-		model.delete(song_id) # Delete the song from the DB calls model_sqlit3 method!
-		return redirect(url_for('index'))
+		# Call the delete method in model_sqlite3.py:
+		model.delete(song_id) # Delete the song from the DB
+
+		return redirect(url_for('index')) # Go back to the index.html page

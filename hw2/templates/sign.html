@@ -1,26 +1,28 @@
-
 {% extends 'layout.html' %}
-
 {% block content %}
-<form action="{{url_for('sign')}}" method="POST">
-	<!-- Song title -->
-	<label for="title">Song Title:</label>
-	<input type="text" id="title" name="title" required>
 
-	<!-- Artist -->
-	<label for="artist">Artist:</label>
-	<input type="text" id="artist" name="artist" required>
+	<h1>Adding a new song</h1>
 
-	<!-- Release date -->
-	<label for="release">Release Date:</label>
-	<input type="date" id="release" name="release" required>
+	<!-- Form for inserting a new song: -->
+	<form action="{{url_for('sign')}}" method="POST">
+		<!-- Song title -->
+		<label for="title">Song Title:</label>
+		<input type="text" id="title" name="title" required>
 
-	<!-- Song url -->
-	<label for="url">Song URL:</label>
-	<input type="url" id="url" name="url" placeholder="https://example.com" required>
+		<!-- Artist -->
+		<label for="artist">Artist:</label>
+		<input type="text" id="artist" name="artist" required>
 
-	<!-- Submit button -->
-	<input type="submit" value="Submit">
-</form>
+		<!-- Release date -->
+		<label for="release">Release Date:</label>
+		<input type="date" id="release" name="release" required>
+
+		<!-- Song url -->
+		<label for="url">Song URL:</label>
+		<input type="url" id="url" name="url" placeholder="https://example.com" required>
+
+		<!-- Submit button -->
+		<input type="submit" value="Submit">
+	</form>
 
 {% endblock %}
