@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+	<h1>Songs in the database</h1>
+
+	<!-- Redirect to the sign.html page: -->
+	<a href="{{ url_for('sign') }}"><h3>Enter a new song</h3></a>
+
+	<!-- Redirect to the update.html page: -->
+	<a href="{{ url_for('update') }}"><h3>Remove a song</h3></a>
+
+	<!-- For every song in the songs database (passed in by the
+	songs dictionary list in index.py), display all the song
+	information: -->
+	<h2>Songs:</h2>
+	{% for song in entries%}
+		<div>
+		<p class="entries">
+			<b>Song ID: </b> {{ song.id }} <br>
+			<b>Title: </b> {{ song.title }} <br>
+			<b>Artist: </b>{{ song.artist }} <br>
+			<b>Release Date: </b> {{ song.release }} <br>
+			<b>Song URL: </b><a href="{{ song.url }}">{{ song.url }}</a>
+		</p>
+		</div>
+	{% endfor %}
+
+{% endblock %}

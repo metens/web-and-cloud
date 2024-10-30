@@ -1,0 +1,8 @@
+# From source: 'https://codefresh.io/blog/not-ignore-dockerignore-2/'
+# .dockerignore
+*.pyc
+__pycache__
+*.log
+.git
+node_modules
+
