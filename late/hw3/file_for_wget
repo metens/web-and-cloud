@@ -1,0 +1,12 @@
+wget http://localhost:8000
+--2024-11-13 04:35:31--  http://localhost:8000/
+Resolving localhost (localhost)... 127.0.0.1, ::1
+Connecting to localhost (localhost)|127.0.0.1|:8000... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 659 [text/html]
+Saving to: ‘index.html’
+
+     0K                                                       100% 65.9M=0s
+
+2024-11-13 04:35:31 (65.9 MB/s) - ‘index.html’ saved [659/659]
+

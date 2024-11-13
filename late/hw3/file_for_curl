@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Song Submission Form</title>
+	<link rel=stylesheet type=text/css href="/static/styles.css">	
+</head>
+<body>
+	<div>
+		
+
+	<h1>Songs in the database</h1>
+
+	<!-- Redirect to the sign.html page: -->
+	<a href="/sign"><h3>Enter a new song</h3></a>
+
+	<!-- Redirect to the update.html page: -->
+	<a href="/update"><h3>Remove a song</h3></a>
+
+	<!-- For every song in the songs database (passed in by the
+	songs dictionary list in index.py), display all the song
+	information: -->
+	<h2>Songs:</h2>
+	
+
+	
+	</div>
+</body>
+</html> http://localhost:8000

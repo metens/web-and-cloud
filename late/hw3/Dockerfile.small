@@ -1,0 +1,23 @@
+# Base Linux image:
+FROM python:3.9-alpine
+# FROM ubuntu:20.04
+
+LABEL maintainer="metens@pdx.edu" 
+
+# Create the working DIR in the container:
+WORKDIR /app 
+
+# Copy the requirements file first to leverage Docker's caching (chatgpt idea):
+COPY hw2/requirements.txt .
+
+# Install dependencies and connect them via '&&':
+RUN apk add --no-cache curl && pip install --no-cache-dir -r requirements.txt
+
+# Copy all the contents of hw2 into the 
+# working directory in the container:
+COPY /hw2 /app
+
+ENTRYPOINT ["python3"]
+
+# Command to run app.py:
+CMD ["app.py"] 

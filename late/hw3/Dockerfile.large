@@ -1,0 +1,22 @@
+# Base Linux image:
+FROM ubuntu:20.04
+
+LABEL maintainer="metens@pdx.edu" 
+
+# Updates and python installations for image:
+RUN apt-get update -y 
+RUN apt-get install -y python3-pip curl
+
+# Create the working DIR in the container:
+WORKDIR /app 
+
+# Copy all the contents of hw2 into the 
+# working directory in the container:
+COPY /hw2 /app
+
+RUN pip install -r requirements.txt 
+
+ENTRYPOINT ["python3"]
+
+# Command to run app.py:
+CMD ["app.py"] 
