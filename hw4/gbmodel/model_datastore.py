@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import logging
 from .Model import Model
 from google.cloud import datastore
 
@@ -108,14 +107,12 @@ class model(Model):
             if song:
                 # If the song exists, delete it
                 self.client.delete(key)
-                logging.info(f"Deleted song with ID: {song_id}")
                 return True
             else:
                 # If the song doesn't exist, return False
-                logging.warning(f"Song with ID {song_id} not found.")
                 return False
 
         except Exception as e:
             # Log any exceptions that occur
-            logging.error(f"Error deleting song with ID {song_id}: {e}")
+            print(f"Error deleting song with ID {song_id}: {e}");
             return False

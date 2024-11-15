@@ -1,34 +1,23 @@
-# Use Python base image
-FROM python:3.11-slim
+# Use Python 3.11 Alpine image (minimal image size)
+FROM python:3.11-alpine
 
-# Specify your e-mail address as the maintainer of the container image
+# Specify e-mail address as the maintainer of the container image
 LABEL maintainer="metens@pdx.edu"
 
-# Set environment variables
-ENV PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1
-
-# Set the working dir to our app
+# Set the working directory inside the container
 WORKDIR /app
 
-# Cache the requirements first
-COPY requirements.txt . 
+# Copy only the requirements file and install only the necessary Python packages
+COPY requirements.txt .
 
-# Install dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends gcc libpq-dev && \
-    python3 -m venv /env && . /env/bin/activate && \
-    pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt && \
-    apt-get remove -y gcc libpq-dev && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
+# Install only the google-cloud-datastore and flask
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Add venv to PATH
-ENV PATH="/venv/bin:$PATH"
+# Copy the rest of the application code
+COPY . /app
 
-# Copy application files
-COPY . .
+# Expose Flask app port (assuming Flask app runs on port 5000)
+EXPOSE 8080 
 
-# Expose Flask app port
-EXPOSE 5000
-
-# Run the application
-CMD ["python", "app.py"]
+# Set the command to run the Flask application
+CMD ["python3", "app.py"]
