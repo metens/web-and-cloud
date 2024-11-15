@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import logging
 from .Model import Model
 from google.cloud import datastore
 
@@ -33,25 +34,18 @@ def from_datastore(entity):
 class model(Model):
     def __init__(self):
         """Initializes the Datastore client."""
-        self.client = datastore.Client('songs-441606')
+        self.client = datastore.Client('songs-441606') # My new project-ID for hw4
 
     def select(self) -> list:
-        """Fetches all reviews from Datastore.
-        
-        Returns: A list of reviews, where each review is a list of title, artist, release, and url.
         """
-        """
-        Fetches all reviews from Datastore.
+        Fetches all songs from Datastore.
 
         Returns:
-            A list of reviews, where each review is a list of title, artist, release, and url.
-        
-        query = self.client.query(kind='Review')
-        entities = list(map(from_datastore, query.fetch()))
-        return entities
+            A list of songs, where each song is a list of title, artist, release, and url.
         """
-        query = self.client.query(kind='Review')
+        query = self.client.query(kind='Song') # Song is the kind of data in google-cloud datastore
         entities = list(query.fetch())
+
         # Convert entities to a list of lists
         reviews = []
         for entity in entities:
@@ -66,7 +60,7 @@ class model(Model):
         return reviews
 
     def insert(self, title: str, artist: str, release, url: str) -> bool:
-        """Inserts a new review into Datastore.
+        """Inserts a new song into Datastore.
 
         Args:
             title: The title of the song.
@@ -78,7 +72,7 @@ class model(Model):
             True if the insertion is successful, False otherwise.
         """
         try:
-            key = self.client.key('Review')
+            key = self.client.key('Song')
             rev = datastore.Entity(key)
             rev.update({
                 'title': title,
@@ -88,59 +82,40 @@ class model(Model):
             })
             self.client.put(rev)
             return True
+
         except Exception as e:
             print(f"Error inserting entity: {e}")
             return False
-"""
-from .Model import Model
-from google.cloud import datastore
 
-def from_datastore(entity):
-    if not entity:
-        return None
-    if isinstance(entity, list):
-        entity = entity.pop()
+    def delete(self, song_id: str) -> bool:
+        """Deletes a song from Datastore by its ID.
 
-    return [entity['title'],entity['artist'],entity['release'],entity['url']]
+        Args:
+            song_id: The ID of the song to be deleted.
 
-class model(Model):
-    def __init__(self):
-        self.client = datastore.Client('songs-441606')
+        Returns:
+            True if the deletion is successful, False if the song was not found.
+        """
+        try:
+            # If song_id is an integer, use the integer type
+            if song_id.isdigit():
+                key = self.client.key('Song', int(song_id))  # Use integer key for numeric IDs
+            else:
+                key = self.client.key('Song', song_id)  # Use string key for non-numeric IDs
+            
+            song = self.client.get(key)
 
-    def select(self):
-        query = self.client.query(kind = 'Review')
-        entities = list(map(from_datastore,query.fetch()))
-        return entities
+            if song:
+                # If the song exists, delete it
+                self.client.delete(key)
+                logging.info(f"Deleted song with ID: {song_id}")
+                return True
+            else:
+                # If the song doesn't exist, return False
+                logging.warning(f"Song with ID {song_id} not found.")
+                return False
 
-    def insert(self,name,email,message):
-        key = self.client.key('Review')
-        rev = datastore.Entity(key)
-        rev.update( {
-            'title': title,
-            'artist' : artist,
-            'release' : release,
-            'url' : url 
-            })
-        self.client.put(rev)
-        return True
-"""
-def insert_sample_data():
-    client = datastore.Client('songs-441606')  # I made a new project for hw4
-
-    # Example data to insert
-    song_data = [
-        {'title': 'Song 1', 'artist': 'Artist 1', 'release': '2024-01-01', 'url': 'http://example.com/1'},
-        {'title': 'Song 2', 'artist': 'Artist 2', 'release': '2024-02-01', 'url': 'http://example.com/2'},
-        {'title': 'Song 3', 'artist': 'Artist 3', 'release': '2024-03-01', 'url': 'http://example.com/3'},
-    ]
-    
-    for data in song_data:
-        key = client.key('Review')  # Assuming your entity kind is 'Review'
-        entity = datastore.Entity(key)
-        entity.update(data)
-        client.put(entity)
-
-    print("Sample data inserted into Datastore.")
-
-# Call this function to insert the data
-#insert_sample_data()
+        except Exception as e:
+            # Log any exceptions that occur
+            logging.error(f"Error deleting song with ID {song_id}: {e}")
+            return False
