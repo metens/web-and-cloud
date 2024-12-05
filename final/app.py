@@ -1,56 +1,42 @@
-from flask import Flask, redirect, request, url_for, render_template
+from flask import Flask, request, jsonify
 import requests
 import os
-  
-app = Flask(__name__)
-  
+
+app = Flask(__name__) # Flask object
+
+""" Google Maps Platform Resources:
+https://developers.google.com/maps/documentation/directions/get-api-key
+https://developers.google.com/maps/documentation/directions/get-directions
+"""
+
+# API Key from environment variable $API_KEY to keep api_key secret:
+google_api_key = os.getenv("GOOGLE_API_KEY")
+#yelp_api_key = os.getenv("YELP_API_KEY")
+
+# All Yelp Fusion API endpoints are under:
+#yelp_url = "https://api.yelp.com/v3"
+
+"""To access the google maps api with an output of json:
+https://maps.googleapis.com/maps/api/directions/json?origin=Toronto&destination=Montreal&key=YOUR_API_KEY
+"""
+# Google Directions API:
+google_api_url = "https://maps.googleapis.com/maps/api"
+
 @app.route('/')
 def home_page():
-	return "<html><body><h1>Hello World!</h1>Nothing to see here. Move along.</body></html>"
+	headers = { "Authorization": f"Bearer {google_api_key}" }
 
-@app.route('/secret1')
-def secret_page():
-	return "<html><body><h1>Secret #1</h1>Welcome to the first secret</body></html>"
-
-@app.route('/athlete')
-def athlete_page():	
-	# My API Application details found here: https://www.strava.com/settings/api
-	"""Set the api variables:"""
-	client_id=141734
-	client_secret='701f50e4f6e9e72e2b5f5de379053b9b03a36596'
-
-	url1 = f"http://www.strava.com/oauth/authorize?client_id={client_id}&response_type=code&redirect_uri=http://localhost/exchange_token&approval_prompt=force&scope=read"
-
-	#authorization_code='ff41a52ebf87e6b1e048306c6596bfb787e4fdd5'
-	#grant_type='authorization_code'
-
-	# Set the API endpoint
-	url = "https://www.strava.com/oauth/token"
-
-	# Prepare the payload (form data)
-	"""
-	data = {
-	    'client_id': client_id,
-	    'client_secret': client_secret,
-	    'code': authorization_code,
-	    'grant_type': grant_type
-	}"""
-
-	data = {'hello'}
-	# Make the POST request
-	#response = requests.post(url1, data=data)
-	response = requests.post(url1, data=data)
-	"""
-	# Check if the request was successful
+	# Using latitiude and longitude for destination and origin locations:
+	url = f"{google_api_url}/directions/json?destination=45.486599,-122.795609&origin=45.512230,-122.658722&key={google_api_key}"
+	
+	response = requests.get(url, headers=headers)
 	if response.status_code == 200:
-	    # Parse the JSON response
-	    response_data = response.json()
-	    print("Access Token:", response_data['access_token'])
-	else:
-	    print("Error:", response.status_code, response.text)
-	"""	
-	return "<html><body><h1>Athlete page:</h1></body></html>"
-	#return response
+		print(response.status_code)
+		print(response.text)
+		return response.json()
+	else: 
+		print(response.status_code)
+		return response.json()
 
 if __name__ == "__main__":
-	app.run(host='0.0.0.0', port=8080, debug=True)
+	app.run(host='0.0.0.0', port=8000, debug=True)
