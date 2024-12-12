@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <title>Add a Map using HTML</title>
+  </head>
+  <body>
+    <gmp-map
+      center="{{ latitude }}, {{ longitude }}"
+      zoom="10"
+      map-id="DEMO_MAP_ID"
+      style="height: 400px"
+    ></gmp-map>
+
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&libraries=maps&v=beta"
+      defer
+    ></script>
+  </body>
+</html>
