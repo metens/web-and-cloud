@@ -1,8 +1,9 @@
-from flask import Flask, request, render_template, redirect, url_for, jsonify
+from flask import Flask, request, render_template, redirect, url_for, jsonify, session
 import requests
 import os
 
 app = Flask(__name__) # Flask object
+app.secret_key = 'temporary_secret'
 
 """ Google Maps Platform Resources:
 https://developers.google.com/maps/documentation/directions/get-api-key
@@ -70,8 +71,9 @@ def business_reviews(business_id):
 	print(f'lat and long: ({lat}, {long})')
 
 	
-	address = business_details['location']['display_address']
-	print('Address:', ' '.join(address))  # Joins the list elements into a string
+	address = ' '.join(business_details['location']['display_address']) # Joins the list elements into a string
+	session['dest_address'] = address # Store data in a global session for access between routes.
+	print('Address:', address)  
 	############################################################
 	## GEOCODING API USE:
 	""" Resource: https://developers.google.com/maps/documentation/geocoding/requests-geocoding """
@@ -89,6 +91,7 @@ def business_reviews(business_id):
 	geo_response = requests.get(geocode_url, params=params)
 	place_id = geo_response.json()['results'][0]['place_id']
 	print(place_id)
+	session['dest_place_id'] = place_id
 	############################################################
 	## GOOGLE MAPS API USE:
 	""" Resource: https://developers.google.com/maps/documentation/directions/get-directions """
@@ -102,18 +105,26 @@ def business_reviews(business_id):
 	maps_response = requests.get(google_maps_url, params=params)	
 	print(maps_response.json())
 	############################################################
-	"""
 	DirectionsRequest = {
-	  'origin': f'{lat},{long}',
-	  'destination': dest,
+	  'origin': f'{lat},{long}', # Where we start
+	  'destination': ' '.join(address), # Where we are going
 	  'travelMode': 'DRIVING',
-	  'provideRouteAlternatives': True 
-	}"""
-	return render_template('maps.html', 
-		google_api_key=google_api_key,
-		latitude=lat,
-		longitude=long
-	)
+	  'provideRouteAlternatives': True
+	}
+	return render_template('maps.html', google_api_key=google_api_key)
+
+""" The following API endpoint is used by the 
+static/script.js file to access lat and long
+variables to display the map for directions
+to the user's desired business. """
+@app.route('/fetch-data')
+def fetch_data():
+	print('session dest: ', session.get('dest_address'))
+	data = {
+		# Access the session variable needed for the js fetch method:
+		'destination': session.get('dest_address')
+	}
+	return jsonify(data)
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=8000, debug=True)
