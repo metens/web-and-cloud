@@ -29,7 +29,7 @@ yelp_url = 'https://api.yelp.com/v3'
 
 @app.route('/')
 def root():
-	return '<h1>Nothing Here, move along!</h1>'
+	return render_template('maps.html')
 
 @app.route("/autocomplete", methods=['GET'])
 def autocomplete():
@@ -51,12 +51,13 @@ def autocomplete():
 
 	# Call the Yelp API with the api_key and parameters for a response:
 	response = requests.get(f"{yelp_url}/autocomplete", headers=headers, params=params)
+	
 	return jsonify(response.json())
-	# Pass the variables to the HTML template
-	#return render_template('index.html', username=username, age=age, location=location)
 
 @app.route('/business/<string:business_id>', methods=['GET'])
-def business_reviews(business_id):
+def business(business_id):
+	session.clear(); # Reset all session variables to avoid cacheing one business.
+
 	url = f'{yelp_url}/businesses/{business_id}'
 	headers = {
 		'accept': 'application/json',
@@ -114,17 +115,11 @@ def business_reviews(business_id):
 	}
 	maps_response = requests.get(google_maps_url, params=params)	
 	print(maps_response.json())
-	############################################################
-	return render_template('maps.html', google_api_key=google_api_key, business_name=business_details['name'])
 
-""" The following API endpoint is used by the 
-static/script.js file to access lat and long
-variables to display the map for directions
-to the user's desired business. """
-@app.route('/fetch-data')
-def fetch_data():
-	print('session dest: ', session.get('dest_address'))
-	# Access the session variables needed for the js fetch method:
+	""" The following API endpoint is used by the 
+	static/script.js file to access lat and long
+	variables to display the map for directions
+	to the user's desired business. """
 	data = {
 		'name': session.get('name'),
 		'img': session.get('img'),

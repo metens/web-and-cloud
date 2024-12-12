@@ -16,25 +16,7 @@ const searchBar = document.getElementById("search-bar");
 const resultsDiv = document.getElementById("results");
 const detailsDiv = document.getElementById("details");
 
-
-/*
-// Obtain the business destination from the python route:
-fetch('/fetch-data').then(response => response.json()).then(data => {
-	//destination = { placeId: data.destination }; // Grab python session variable.
-	destination = data.destination; // Grab python session variable.
-	img = data.img;
-	url = data.url;
-	is_open = data.is_open;
-	rating = data.rating;
-	phone = data.phone;
-
-	console.log('Final Destination:', destination); //
-	console.log(url)
-	console.log(is_open)
-	console.log(rating)
-	if (origin) { locationReady = true; initMap(origin, destination, directions); }
-}).catch(error => console.error('Error fetching data:', error));
-*/
+//if (origin) { locationReady = true; initMap(origin, destination, directions); }
 function getLocation() {
     return new Promise((resolve, reject) => {
         if (navigator.geolocation) {
@@ -81,32 +63,12 @@ getLocation().then((coords) => {
 			resultsDiv.innerHTML = ""; // Clear results if input is too short or empty
 		    }
 		});
-		fetch(
 	}
-		
 	
 	
 }).catch((error) => {
     console.error(error);  // Handle the error if geolocation fails
 });
-/*
-// Obtain user location:
-if (navigator.geolocation) {
-	navigator.geolocation.getCurrentPosition((position) => {
-		latitude = position.coords.latitude; longitude = position.coords.longitude;
-		// Ensure async latitude and longitude are numbers and not undefined:
-		if (typeof latitude === "number" && typeof longitude === "number") {
-			origin = { lat: latitude, lng: longitude }; // Set origin as a LatLngLiteral.
-			console.log('Origin:', origin)
-			// Once origin and destination are initialized, create map:
-			//if (destination) { locationReady = true; initMap(origin, destination, directions); }
-		}
-	});
-} else {
-	alert('Geolocation is NOT supported in the current browser.');
-}
-*/
-
 
 // Function to fetch suggestions from the Flask backend
 function fetchSuggestions(query) {
@@ -115,6 +77,7 @@ function fetchSuggestions(query) {
         .then(renderSuggestions)
         .catch(error => showError("Error fetching autocomplete: " + error.message));
 }
+
 function renderSuggestions(data) {
     resultsDiv.innerHTML = ""; // Clear previous results
     let resultFound = false;
@@ -134,7 +97,7 @@ function renderSuggestions(data) {
 
                 // Fetch details of the clicked business
                 //fetch(`/business/${item.id}`)
-		fetch('/fetch-data')
+		fetch(`/business/${item.id}`)
 		    .then(response => {
 			if (!response.ok) {
 			    throw new Error('Network response was not ok');
@@ -189,6 +152,7 @@ function renderSuggestions(data) {
         console.log('No suggestions found.');
     }
 }
+
 // Function to display detailed information for the selected item
 function showDetails(item, type) {
     detailsDiv.style.display = "block"; // Make details visible
@@ -207,8 +171,8 @@ function showDetails(item, type) {
         detailsDiv.innerHTML += `<pre>${JSON.stringify(item, null, 2)}</pre>`;
     }
 }
+
 // Function to display error messages
 function showError(message) {
 	resultsDiv.innerHTML = `<div class='error'>${message}</div>`;
 }
-
