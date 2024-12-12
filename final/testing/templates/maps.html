@@ -2,15 +2,20 @@
 <html>
 	<head>
 		<title>Google Map Directions</title>
-		<style>
-			#map {
-				height: 400px;
-				width: 75%; 
-			}
-		</style>
+		<link rel='stylesheet' href='../static/style.css'>
 	</head>
 	<body>
-		<h1>Directions</h1>
+		<h1>Food Finder</h1>
+		<!-- Yelp API Search Bar: -->
+		<input type="text" id="search-bar" placeholder="I want to eat at..." />
+		<div id="results" role="list"></div>
+		<div id="details" class="details" role="region" aria-live="polite" style="display:none;"></div>
+
+		<!-- Yelp Search Bar with Autocomplete to Search for Local Business: -->
+		<script type='module' src="{{ url_for('static', filename='search.js') }}"></script>
+
+		
+		<h1>Directions To: {{ business_name }}</h1>
 		<!-- Container for the map -->
 		<div id="map"></div> 
 

@@ -3,67 +3,42 @@
 // from the origin (user location) to the destination (business) and how long
 // it will take to get there via car.
 
-let destination; // Business destination.
-// Obtain the business destination from the python route:
-fetch('/fetch-data').then(response => response.json()).then(data => {
-	//destination = { placeId: data.destination }; // Grab python session variable.
-	destination = data.destination; // Grab python session variable.
-	console.log('Final Destination:', destination); //
-	if (origin) initMap(origin, destination); 
-}).catch(error => console.error('Error fetching data:', error));
-
-let latitude, longitude; // User latitude and longitude.
-let origin; // User's origin (location).
-// Obtain user location:
-if (navigator.geolocation) {
-	navigator.geolocation.getCurrentPosition((position) => {
-		latitude = position.coords.latitude; longitude = position.coords.longitude;
-		// Ensure async latitude and longitude are numbers and not undefined:
-		if (typeof latitude === "number" && typeof longitude === "number") {
-			origin = { lat: latitude, lng: longitude }; // Set origin as a LatLngLiteral.
-			console.log('Origin:', origin)
-			// Once origin and destination are initialized, create map:
-			if (destination) initMap(origin, destination); 
-		}
-	});
-} else {
-	alert('Geolocation is NOT supported in the current browser.');
-}
-
 // Resource: https://developers.google.com/maps/documentation/javascript/directions?hl=en#TravelModes //
 // Create the Google Maps API map to display the current user location
 // and the final business destination with directions:
-function initMap(origin, destination) { // Export function to use in script.js.
-	// Create the map
-	const map = new google.maps.Map(document.getElementById("map"), {
-		center: origin,
-		zoom: 10 
-	});
+function initMap(origin, destination, directions) { // Export function to use in script.js.
+	if (directions == true) { // Only display map and directions if user asks.
+		// Create the map
+		const map = new google.maps.Map(document.getElementById("map"), {
+			center: origin,
+			zoom: 10 
+		});
 
-	// Initialize Directions Service and Renderer objects:
-	const directionsService = new google.maps.DirectionsService();
-	const directionsRenderer = new google.maps.DirectionsRenderer();
+		// Initialize Directions Service and Renderer objects:
+		const directionsService = new google.maps.DirectionsService();
+		const directionsRenderer = new google.maps.DirectionsRenderer();
 
-	// Attach DirectionsRenderer to the map:
-	directionsRenderer.setMap(map);
+		// Attach DirectionsRenderer to the map:
+		directionsRenderer.setMap(map);
 
-	// Create route request:
-	const request = {
-		origin: origin,
-		destination: destination,
-		travelMode: google.maps.TravelMode.DRIVING,
-	};
+		// Create route request:
+		const request = {
+			origin: origin,
+			destination: destination,
+			travelMode: google.maps.TravelMode.DRIVING,
+		};
 
-	// Make the directions request:
-	directionsService.route(request, (result, status) => {
-		if (status === google.maps.DirectionsStatus.OK) {
-			// Render route from request:
-			directionsRenderer.setDirections(result);
-			TimeToDest(result); // Call to display time in browser.
-	} else {
-		console.error(`Error: Request failed because: ${status}`);
+		// Make the directions request:
+		directionsService.route(request, (result, status) => {
+			if (status === google.maps.DirectionsStatus.OK) {
+				// Render route from request:
+				directionsRenderer.setDirections(result);
+				TimeToDest(result); // Call to display time in browser.
+			} else {
+				console.error(`Error: Request failed because: ${status}`);
+			}
+		});
 	}
-});
 }
 window.initMap = initMap; // Google Maps API requires global initMap access.
 
